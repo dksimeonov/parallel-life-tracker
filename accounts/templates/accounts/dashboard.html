@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Dashboard</h1>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">{{ user.username }}</h5>
+            <p class="mb-1"><strong>Display name:</strong> {{ user.display_name|default:"Not set" }}</p>
+            <p class="mb-1"><strong>City:</strong> {{ user.current_city|default:"Not set" }}</p>
+            <p class="mb-1"><strong>Occupation:</strong> {{ profile.occupation|default:"Not set" }}</p>
+            <p class="mb-0">
+                <strong>Profile visibility:</strong>
+                {% if profile.is_profile_public %}Public{% else %}Private{% endif %}
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ parallel_lives_count }}</h3>
+                    <p class="mb-0">Parallel lives</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ milestones_count }}</h3>
+                    <p class="mb-0">Milestones created</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>{{ reflections_count }}</h3>
+                    <p class="mb-0">Reflections written</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

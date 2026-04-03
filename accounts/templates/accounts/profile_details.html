@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}Profile Details{% endblock %}
+
+{% block content %}
+    <h1 class="mb-4">Profile Details</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <p><strong>Username:</strong> {{ profile.user.username }}</p>
+            <p><strong>Email:</strong> {{ profile.user.email }}</p>
+            <p><strong>Display name:</strong> {{ profile.user.display_name|default:"Not set" }}</p>
+            <p><strong>City:</strong> {{ profile.user.current_city|default:"Not set" }}</p>
+            <p><strong>Birth year:</strong> {{ profile.user.birth_year|default:"Not set" }}</p>
+            <p><strong>Occupation:</strong> {{ profile.occupation|default:"Not set" }}</p>
+            <p><strong>Motto:</strong> {{ profile.personal_motto|default:"Not set" }}</p>
+            <p><strong>Website:</strong> {{ profile.website|default:"Not set" }}</p>
+            <p><strong>Bio:</strong> {{ profile.user.bio|default:"Not set" }}</p>
+            <p><strong>Visibility:</strong> {% if profile.is_profile_public %}Public{% else %}Private{% endif %}</p>
+
+            {% if request.user == profile.user %}
+                <a href="{% url 'profile-edit' %}" class="btn btn-primary">Edit Profile</a>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
