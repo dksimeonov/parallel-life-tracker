@@ -61,8 +61,8 @@ class ParallelLife(models.Model):
     )
     divergence_date = models.DateField()
     starting_choice = models.CharField(
-        max_length = 200,
-        help_text = "The key decision that changed this life path.",
+        max_length=200,
+        help_text="The key decision that changed this life path.",
     )
     summary = models.TextField()
     visibility = models.CharField(
@@ -75,7 +75,7 @@ class ParallelLife(models.Model):
         choices=StatusChoices.choices,
         default=StatusChoices.DRAFT,
     )
-    realism_score = models.PositiveIntegerField(
+    realism_score = models.PositiveSmallIntegerField(
         validators=[MinValueValidator(1), MaxValueValidator(10)],
         help_text="Rate how realistic this path feels from 1 to 10.",
     )
@@ -97,7 +97,7 @@ class ParallelLife(models.Model):
         if len(self.title.strip()) < 5:
             raise ValidationError({"title": "Title must be at least 5 characters long."})
 
-        if len(self.title.strip()) < 20:
+        if len(self.summary.strip()) < 20:
             raise ValidationError({"summary": "Summary must be at least 20 characters long."})
 
     def save(self, *args, **kwargs):
@@ -112,7 +112,7 @@ class ParallelLife(models.Model):
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse("home")
+        return reverse("parallel-life-details", kwargs={"slug": self.slug})
 
     def __str__(self):
         return self.title
