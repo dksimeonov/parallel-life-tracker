@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Parallel Lives{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Parallel Lives</h1>
+        {% if user.is_authenticated %}
+            <a href="{% url 'parallel-life-create' %}" class="btn btn-primary">Create Parallel Life</a>
+        {% endif %}
+    </div>
+
+    <form method="get" class="row g-2 mb-4">
+    <div class="col-md-8">
+        <label for="search-q" class="form-label">Search</label>
+        <input id="search-q" type="text" name="q" value="{{ request.GET.q }}"
+               class="form-control"
+               placeholder="Search by title, summary or decision">
+    </div>
+
+    <div class="col-md-3">
+        <label for="visibility" class="form-label">Visibility</label>
+        <select id="visibility" name="visibility" class="form-select">
+            <option value="">All visibility types</option>
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+            <option value="unlisted">Unlisted</option>
+        </select>
+    </div>
+
+    <div class="col-md-1 d-flex align-items-end">
+        <button class="btn btn-dark w-100" type="submit">Go</button>
+    </div>
+</form>
+
+    <div class="row g-4">
+        {% for parallel_life in parallel_lives %}
+            <div class="col-md-6">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ parallel_life.title }}</h5>
+                        <p class="card-text">{{ parallel_life.summary|truncatechars:120 }}</p>
+                        <p class="mb-1"><strong>Owner:</strong> {{ parallel_life.owner.username }}</p>
+                        <p class="mb-1"><strong>Visibility:</strong> {{ parallel_life.get_visibility_display }}</p>
+                        <p class="mb-3"><strong>Realism:</strong> {{ parallel_life.realism_score }}/10</p>
+
+                        <a href="{% url 'parallel-life-detail' parallel_life.slug %}" class="btn btn-outline-dark">Details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <p>No parallel lives found.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

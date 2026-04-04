@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Parallel Life{% endblock %}
+
+{% block content %}
+    <h1>Delete Parallel Life</h1>
+    <p>Are you sure you want to delete "{{ object.title }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn btn-danger" type="submit">Yes, delete</button>
+        <a href="{% url 'parallel-life-detail' object.slug %}" class="btn btn-secondary">Cancel</a>
+    </form>
+{% endblock %}

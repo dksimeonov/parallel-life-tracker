@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}{{ parallel_life.title }}{% endblock %}
+
+{% block content %}
+    <div class="mb-4">
+        <h1>{{ parallel_life.title }}</h1>
+        <p>{{ parallel_life.summary }}</p>
+        <p><strong>Owner:</strong> {{ parallel_life.owner.username }}</p>
+        <p><strong>Turning point:</strong> {{ parallel_life.starting_choice }}</p>
+        <p><strong>Visibility:</strong> {{ parallel_life.get_visibility_display }}</p>
+        <p><strong>Status:</strong> {{ parallel_life.get_status_display }}</p>
+        <p><strong>Realism score:</strong> {{ parallel_life.realism_score }}/10</p>
+
+        <p>
+            <strong>Domains:</strong>
+            {% for domain in parallel_life.domains.all %}
+                <span class="badge bg-secondary">{{ domain.name }}</span>
+            {% endfor %}
+        </p>
+
+        {% if user == parallel_life.owner %}
+            <a href="{% url 'parallel-life-edit' parallel_life.slug %}" class="btn btn-warning">Edit</a>
+            <a href="{% url 'parallel-life-delete' parallel_life.slug %}" class="btn btn-danger">Delete</a>
+            <a href="{% url 'milestone-list' parallel_life.slug %}" class="btn btn-outline-dark">Milestones</a>
+            <a href="{% url 'reflection-create' parallel_life.slug %}" class="btn btn-outline-primary">Add Reflection</a>
+        {% endif %}
+    </div>
+
+    {% if parallel_life.decision %}
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4>Divergence Decision</h4>
+                <p><strong>{{ parallel_life.decision.decision_title }}</strong></p>
+                <p><strong>Real path:</strong> {{ parallel_life.decision.real_world_path }}</p>
+                <p><strong>Alternative path:</strong> {{ parallel_life.decision.alternate_path }}</p>
+                <p><strong>Reasoning:</strong> {{ parallel_life.decision.reasoning }}</p>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mb-4">
+        <h3>Recent Reflections</h3>
+        {% for reflection in parallel_life.reflections.all %}
+            {% if not reflection.is_private or user == parallel_life.owner %}
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <h5>{{ reflection.title }}</h5>
+                        <p>{{ reflection.content }}</p>
+                        <small>Mood score: {{ reflection.mood_score }}/10</small>
+                        {% if user == reflection.user %}
+                            <div class="mt-2">
+                                <a href="{% url 'reflection-edit' reflection.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{% url 'reflection-delete' reflection.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {%empty %}
+            <p>No reflections yet.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Milestones{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Milestones for "{{ parallel_life.title }}"</h1>
+        {% if user == parallel_life.owner %}
+            <a href="{% url 'milestone-create' parallel_life.slug %}" class="btn btn-primary">Add Milestone</a>
+        {% endif %}
+    </div>
+
+    {% for milestone in milestones %}
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5>{{ milestone.title }}</h5>
+                <p>{{ milestone.description }}</p>
+                <p><strong>Status:</strong> {{ milestone.get_status_display }}</p>
+                <p><strong>Progress:</strong> {{ milestone.progress }}%</p>
+
+                {% if user == parallel_life.owner %}
+                    <a href="{% url 'milestone-edit' milestone.pk %}" class="btn btn-sm btn-warning">Edit</a>
+                    <a href="{% url 'milestone-delete' milestone.pk %}" class="btn btn-sm btn-danger">Delete</a>
+                {% endif %}
+            </div>
+        </div>
+    {% empty %}
+        <p>No milestones yet.</p>
+    {% endfor %}
+{% endblock %}
