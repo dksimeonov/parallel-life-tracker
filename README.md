@@ -78,6 +78,9 @@ Parallel Life Tracker is a Django web application that allows users to explore "
 
 The project is deployed on Azure.
 
+You can access it through here: 
+https://parallel-life-tracker-dk-gha3bbh2f7bmfpcr.polandcentral-01.azurewebsites.net/
+
 ## Installation & Setup (Local - Optional)
 
 If you wish to run the project locally, follow these steps.
