@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load parallel_life_extras %}
 
 {% block title %}Parallel Lives{% endblock %}
 
@@ -42,8 +43,7 @@
                         <p class="card-text">{{ parallel_life.summary|truncatechars:120 }}</p>
                         <p class="mb-1"><strong>Owner:</strong> {{ parallel_life.owner.username }}</p>
                         <p class="mb-1"><strong>Visibility:</strong> {{ parallel_life.get_visibility_display }}</p>
-                        <p class="mb-3"><strong>Realism:</strong> {{ parallel_life.realism_score }}/10</p>
-
+                        <p class="mb-3"><strong>Realism:</strong> {{ parallel_life.realism_score }}/10 — {{ parallel_life.realism_score|stars }}</p>
                         <a href="{% url 'parallel-life-detail' parallel_life.slug %}" class="btn btn-outline-dark">Details</a>
                     </div>
                 </div>

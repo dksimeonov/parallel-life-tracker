@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.urls import reverse, reverse_lazy
 from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from django.shortcuts import get_object_or_404
@@ -19,15 +20,16 @@ class MilestoneListView(LoginRequiredMixin, ListView):
     model = Milestone
     template_name = "milestones/milestone_list.html"
     context_object_name = "milestones"
+    raise_exception = True
 
     def get_parallel_life(self):
         return get_object_or_404(ParallelLife, slug=self.kwargs["slug"])
 
-    def dispatch(self, request, *args, **kwargs):
-        parallel_life = self.get_parallel_life()
-        if parallel_life.owner != request.user:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
+    def test_func(self):
+        return self.get_parallel_life().owner == self.request.user
+
+    def handle_no_permission(self):
+        raise PermissionDenied
 
     def get_queryset(self):
         return self.get_parallel_life().milestones.all()
@@ -52,6 +54,11 @@ class MilestoneCreateView(LoginRequiredMixin, CreateView):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["parallel_life"] = self.get_parallel_life()
+        return kwargs
+
     def form_valid(self, form):
         parallel_life = self.get_parallel_life()
         form.instance.parallel_life = parallel_life
@@ -67,6 +74,11 @@ class MilestoneUpdateView(LoginRequiredMixin, MilestoneOwnerRequiredMixin, Updat
     model = Milestone
     form_class = MilestoneForm
     template_name = "milestones/milestone_form.html"
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs["parallel_life"] = self.object.parallel_life
+        return kwargs
 
     def form_valid(self, form):
         messages.success(self.request, "Milestone updated successfully.")

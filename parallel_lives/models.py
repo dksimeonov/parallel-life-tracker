@@ -171,17 +171,3 @@ class PathFollow(models.Model):
 
     def __str__(self):
         return f"{self.user} follows {self.parallel_life.title}"
-
-
-
-
-
-
-
-
-
-
-
-
-
-

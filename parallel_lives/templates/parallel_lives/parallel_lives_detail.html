@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load parallel_life_extras %}
 
 {% block title %}{{ parallel_life.title }}{% endblock %}
 
@@ -10,7 +11,7 @@
         <p><strong>Turning point:</strong> {{ parallel_life.starting_choice }}</p>
         <p><strong>Visibility:</strong> {{ parallel_life.get_visibility_display }}</p>
         <p><strong>Status:</strong> {{ parallel_life.get_status_display }}</p>
-        <p><strong>Realism score:</strong> {{ parallel_life.realism_score }}/10</p>
+        <p><strong>Realism score:</strong> {{ parallel_life.realism_score }}/10 — {{ parallel_life.realism_score|stars }}</p>
 
         <p>
             <strong>Domains:</strong>

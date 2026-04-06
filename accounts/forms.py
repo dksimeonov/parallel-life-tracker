@@ -74,6 +74,14 @@ class CustomLoginForm(AuthenticationForm):
 
 
 class ProfileEditForm(forms.ModelForm):
+    username = forms.CharField(
+        required=False,
+        disabled=True,
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+        })
+    )
+
     display_name = forms.CharField(
         required=False,
         max_length=40,
@@ -135,6 +143,7 @@ class ProfileEditForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
 
         if self.user_instance:
+            self.fields["username"].initial = self.user_instance.username
             self.fields["display_name"].initial = self.user_instance.display_name
             self.fields["current_city"].initial = self.user_instance.current_city
             self.fields["bio"].initial = self.user_instance.bio

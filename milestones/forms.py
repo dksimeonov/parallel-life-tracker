@@ -4,6 +4,15 @@ from milestones.models import Milestone
 
 
 class MilestoneForm(forms.ModelForm):
+    parallel_life_title = forms.CharField(
+        required=False,
+        disabled=True,
+        label="Parallel life",
+        widget=forms.TextInput(attrs={
+            "class": "form-control",
+        })
+    )
+
     class Meta:
         model = Milestone
         fields = ("title", "description", "target_date", "status", "progress")
@@ -30,6 +39,15 @@ class MilestoneForm(forms.ModelForm):
                 "max": 100,
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        parallel_life = kwargs.pop("parallel_life", None)
+        super().__init__(*args, **kwargs)
+
+        if parallel_life:
+            self.fields["parallel_life_title"].initial = parallel_life.title
+        elif self.instance and self.instance.pk:
+            self.fields["parallel_life_title"].initial = self.instance.parralel_life.title
 
     def clean_progress(self):
         progress = self.cleaned_data["progress"]

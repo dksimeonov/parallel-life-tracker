@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, TemplateView, UpdateView
 
+from accounts.tasks import send_welcome_email_task
 from accounts.forms import CustomLoginForm, ProfileEditForm, UserRegistrationForm
 from accounts.models import AppUser, Profile
 
@@ -20,6 +21,12 @@ class RegisterView(CreateView):
     def form_valid(self, form):
         response = super().form_valid(form)
         login(self.request, self.object)
+
+        send_welcome_email_task.delay(
+            username=self.object.username,
+            email=self.object.email,
+        )
+
         messages.success(self.request, "Your account was created successfully.")
         return response
 
